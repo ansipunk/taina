@@ -5,10 +5,17 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "taina"
 dynamic = ["version"]
-dependencies = []
+dependencies = [
+    "SQLAlchemy==2.0.30",
+    "alembic==1.13.1",
+    "psycopg==3.1.19",
+    "pydantic-settings==2.2.1",
+    "pydantic==2.3.0",
+]
 
 [project.optional-dependencies]
 dev = [
+    "pytest-asyncio==0.23.7",
     "pytest==8.2.1",
     "ruff==0.4.5",
 ]
@@ -17,4 +24,14 @@ dev = [
 version = {attr = "taina.__version__"}
 
 [tool.pytest.ini_options]
-testpaths = ["test"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff.lint]
+select = [
+    "F", "E", "W", "C90", "I", "N", "B", "A", "Q", "RET", "ERA", "RUF",
+    "COM", "C4", "DTZ", "G", "PIE", "T20", "PT", "RSE", "SIM", "W",
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
