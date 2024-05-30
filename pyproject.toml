@@ -9,6 +9,7 @@ dependencies = [
     "SQLAlchemy==2.0.30",
     "alembic==1.13.1",
     "psycopg==3.1.19",
+    "psycopg_pool==3.2.2",
     "pydantic-settings==2.2.1",
     "pydantic==2.3.0",
 ]
@@ -32,6 +33,7 @@ select = [
     "F", "E", "W", "C90", "I", "N", "B", "A", "Q", "RET", "ERA", "RUF",
     "COM", "C4", "DTZ", "G", "PIE", "T20", "PT", "RSE", "SIM", "W",
 ]
+ignore = ["N818"]
 
 [tool.ruff.lint.isort]
 force-single-line = true

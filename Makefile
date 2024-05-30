@@ -19,7 +19,8 @@ $(PYTHON):
 	$(VENV)/bin/python -m pip install -e .[dev]
 
 migrate: bootstrap
-	sudo -u postgres psql -c "CREATE USER taina WITH PASSWORD 'taina';" || true
+	sudo -u postgres psql -c "CREATE taina WITH PASSWORD 'taina';" || true
+	sudo -u postgres psql -c "ALTER USER taina CREATEDB;" || true
 	sudo -u postgres psql -c "CREATE DATABASE taina OWNER taina;" || true
 	$(PYTHON) -m alembic upgrade head
 

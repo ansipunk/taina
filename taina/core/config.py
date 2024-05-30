@@ -9,6 +9,7 @@ class PostgresSettings(pydantic_settings.BaseSettings):
     username: str = "taina"
     password: str = "taina"
     database: str = "taina"
+    force_rollback: bool = False
 
     @property
     def url(self):

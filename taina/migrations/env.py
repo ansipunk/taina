@@ -19,5 +19,7 @@ def run_migrations() -> None:
         with alembic.context.begin_transaction():
             alembic.context.run_migrations()
 
+    engine.dispose()
+
 
 run_migrations()
