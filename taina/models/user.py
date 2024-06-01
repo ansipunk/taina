@@ -1,6 +1,7 @@
 import psycopg.errors
 import sqlalchemy
 
+from .. import schemas
 from ..core import postgres
 
 User = sqlalchemy.Table(
@@ -20,11 +21,8 @@ class UserDoesNotExist(Exception):
 
 
 @postgres.session
-async def user_create(session, username: str, password: str):
-    query = User.insert().values(
-        username=username,
-        password=password,
-    ).returning(*User.c)
+async def user_create(session, user: schemas.UserCreate):
+    query = User.insert().values(**user.model_dump()).returning(*User.c)
 
     try:
         user = await session.fetch_one(query)
@@ -52,11 +50,11 @@ async def user_list(session):
 
 
 @postgres.session
-async def user_update(session, username: str, password: str):
+async def user_update(session, username: str, user: schemas.UserUpdate):
     query = User.update().where(
         User.c.username == username,
     ).values(
-        password=password,
+        **user.model_dump(),
     ).returning(*User.c)
 
     user = await session.fetch_one(query)

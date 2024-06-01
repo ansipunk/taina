@@ -9,6 +9,7 @@ import pytest
 import taina.core.config
 import taina.core.postgres
 import taina.models
+import taina.schemas
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -51,8 +52,10 @@ def user(_db):
         password: str = "password",
     ) -> dict:
         return await taina.models.user_create(
-            username=username,
-            password=password,
+            taina.schemas.UserCreate(
+                username=username,
+                password=password,
+            ),
         )
 
     return builder
