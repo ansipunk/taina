@@ -2,10 +2,12 @@ import uuid
 
 import alembic
 import alembic.config
+import async_asgi_testclient
 import psycopg
 import psycopg.sql
 import pytest
 
+import taina
 import taina.core.config
 import taina.core.postgres
 import taina.models
@@ -43,6 +45,12 @@ async def _db():
     await taina.core.postgres.connect(taina.core.config.postgres.url)
     yield
     await taina.core.postgres.disconnect()
+
+
+@pytest.fixture()
+async def api_client():
+    async with async_asgi_testclient.TestClient(taina.app) as client:
+        yield client
 
 
 @pytest.fixture()

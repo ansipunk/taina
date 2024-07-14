@@ -8,7 +8,7 @@ dynamic = ["version"]
 dependencies = [
     "SQLAlchemy==2.0.31",
     "alembic==1.13.2",
-    "fastapi==0.111.0",
+    "fastapi==0.111.1",
     "psycopg==3.1.20",
     "psycopg_pool==3.2.2",
     "pydantic-settings==2.3.4",
@@ -33,7 +33,7 @@ version = {attr = "taina.__version__"}
 omit = ["taina/migrations/*"]
 
 [tool.pytest.ini_options]
-addopts = "-n auto --cov=taina --cov-report=term-missing --cov-report=html"
+addopts = "-n 4 --cov=taina --cov-report=term-missing --cov-report=html"
 testpaths = ["tests"]
 asyncio_mode = "auto"
 
@@ -42,7 +42,7 @@ select = [
     "F", "E", "W", "C90", "I", "N", "B", "A", "Q", "RET", "ERA", "RUF",
     "COM", "C4", "DTZ", "G", "PIE", "T20", "PT", "RSE", "SIM", "W",
 ]
-ignore = ["N818"]
+ignore = ["N818", "B904"]
 
 [tool.ruff.lint.isort]
 force-single-line = true

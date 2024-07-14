@@ -11,3 +11,11 @@ class UserCreate(User):
 
 class UserUpdate(User):
     pass
+
+
+class UserGet(UserCreate):
+    pass
+
+
+class UserList(pydantic.BaseModel):
+    users: list[UserGet]
