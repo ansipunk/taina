@@ -24,6 +24,9 @@ migrate: bootstrap
 	sudo -u postgres psql -c "CREATE DATABASE taina OWNER taina;" || true
 	$(PYTHON) -m alembic upgrade head
 
+dev: bootstrap
+	$(PYTHON) -m uvicorn taina:app
+
 lint: bootstrap
 	$(PYTHON) -m ruff check --fix taina tests
 
