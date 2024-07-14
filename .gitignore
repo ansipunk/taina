@@ -2,3 +2,6 @@
 
 __pycache__/
 taina.egg-info/
+
+htmlcov/
+.coverage

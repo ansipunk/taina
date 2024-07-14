@@ -46,6 +46,12 @@ async def test_user_list(user_default, user):
     assert users == [user_a, user_b]
 
 
+@pytest.mark.usefixtures("_db")
+async def test_user_list_no_users():
+    users = await taina.models.user_list()
+    assert users == []
+
+
 async def test_user_update(user_default):
     schema = taina.schemas.UserUpdate(password="new password")
     user = await taina.models.user_update(user_default["username"], schema)
