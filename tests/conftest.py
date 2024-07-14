@@ -14,7 +14,7 @@ import taina.schemas
 
 @pytest.fixture(scope="session", autouse=True)
 def _prepare_test_database():
-    url = taina.core.config.postgres.url.replace("postgresql+psycopg", "postgresql")
+    url = taina.core.config.postgres.url
 
     database = f"taina_test_{uuid.uuid4()}"
     database_sql = psycopg.sql.Identifier(database)

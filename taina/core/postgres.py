@@ -31,8 +31,6 @@ async def connect(url: str = config.postgres.url):
     global _conn
     global _transaction
 
-    url = url.replace("postgresql+psycopg", "postgresql")
-
     if config.postgres.force_rollback:
         if not _conn:
             _conn = await psycopg.AsyncConnection.connect(url)

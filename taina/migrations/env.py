@@ -8,7 +8,8 @@ from taina.core import postgres
 
 
 def run_migrations() -> None:
-    engine = sqlalchemy.create_engine(config.postgres.url)
+    url = config.postgres.url.replace("postgresql", "postgresql+psycopg")
+    engine = sqlalchemy.create_engine(url)
 
     with engine.connect() as connection:
         alembic.context.configure(

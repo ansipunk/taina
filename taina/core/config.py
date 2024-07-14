@@ -16,7 +16,7 @@ class PostgresSettings(pydantic_settings.BaseSettings):
         password = urllib.parse.quote_plus(self.password)
 
         return (
-            f"postgresql+psycopg://{self.username}:{password}"
+            f"postgresql://{self.username}:{password}"
             f"@{self.host}:{self.port}/{self.database}"
         )
 
