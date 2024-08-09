@@ -1,6 +1,7 @@
 import fastapi
 import fastapi.exceptions
 
+from .. import auth
 from .. import models
 from .. import schemas
 
@@ -19,6 +20,11 @@ async def user_create(user: schemas.UserCreate):
 async def users_list():
     users = await models.user_list()
     return {"users": users}
+
+
+@router.get("/me", response_model=schemas.UserGet)
+async def read_users_me(current_user=fastapi.Depends(auth.get_current_user)):
+    return current_user
 
 
 @router.get("/{username}", response_model=schemas.UserGet)

@@ -23,4 +23,13 @@ class PostgresSettings(pydantic_settings.BaseSettings):
     model_config = pydantic_settings.SettingsConfigDict(env_prefix="TAINA_POSTGRES_")
 
 
+class SecuritySettings(pydantic_settings.BaseSettings):
+    secret_key: str = "0000000000000000000000000000000000000000000000000000000000000000"
+    access_token_ttl: int = 30  # Minutes
+    user_password_salt: str = "00000000000000000000000000000000"
+
+    model_config = pydantic_settings.SettingsConfigDict(env_prefix="TAINA_SECURITY_")
+
+
 postgres = PostgresSettings()
+security = SecuritySettings()
