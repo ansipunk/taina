@@ -15,7 +15,7 @@ help:
 bootstrap: $(PYTHON)
 $(PYTHON):
 	python -m venv $(VENV)
-	$(VENV)/bin/python -m pip install pip==24.1.2 setuptools==70.3.0 wheel==0.43.0
+	$(VENV)/bin/python -m pip install pip==24.2 setuptools==72.1.0 wheel==0.44.0
 	$(VENV)/bin/python -m pip install -e .[dev]
 
 migrate: bootstrap
