@@ -9,12 +9,14 @@ async def test_user_create():
     schema = taina.schemas.UserCreate(
         username="username",
         password="password",
+        display_name="Display Name",
     )
 
     user = await taina.models.user_create(schema)
 
     assert user["username"] == schema.username
     assert user["password"] == schema.password
+    assert user["display_name"] == schema.display_name
 
 
 async def test_user_create_username_in_use(user_default):
@@ -31,6 +33,7 @@ async def test_user_get(user_default):
     user = await taina.models.user_get(user_default["username"])
     assert user["username"] == user_default["username"]
     assert user["password"] == user_default["password"]
+    assert user["display_name"] == user_default["display_name"]
 
 
 @pytest.mark.usefixtures("_db")
@@ -53,10 +56,11 @@ async def test_user_list_no_users():
 
 
 async def test_user_update(user_default):
-    schema = taina.schemas.UserUpdate(password="new password")
+    schema = taina.schemas.UserUpdate(display_name="New Display Name")
     user = await taina.models.user_update(user_default["username"], schema)
     assert user["username"] == user_default["username"]
-    assert user["password"] == schema.password
+    assert user["password"] == user_default["password"]
+    assert user["display_name"] == schema.display_name
 
 
 @pytest.mark.usefixtures("_db")
@@ -64,7 +68,7 @@ async def test_user_update_nonexistent():
     with pytest.raises(taina.models.UserDoesNotExist):
         await taina.models.user_update(
             "nonexistent",
-            taina.schemas.UserUpdate(password="password"),
+            taina.schemas.UserUpdate(display_name="Display Name"),
         )
 
 

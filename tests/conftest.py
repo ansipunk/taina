@@ -58,11 +58,13 @@ def user(_db):
     async def builder(
         username: str = "username",
         password: str = "password",
+        display_name: str = "Display Name",
     ) -> dict:
         return await taina.models.user_create(
             taina.schemas.UserCreate(
                 username=username,
                 password=password,
+                display_name=display_name,
             ),
         )
 
@@ -71,4 +73,4 @@ def user(_db):
 
 @pytest.fixture()
 async def user_default(user):
-    return await user(username="default")
+    return await user(username="john.doe", display_name="John Doe")

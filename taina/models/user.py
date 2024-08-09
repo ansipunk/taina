@@ -9,6 +9,7 @@ User = sqlalchemy.Table(
     postgres.metadata,
     sqlalchemy.Column("username", sqlalchemy.Text, primary_key=True),
     sqlalchemy.Column("password", sqlalchemy.Text, nullable=False),
+    sqlalchemy.Column("display_name", sqlalchemy.Text, nullable=True),
 )
 
 
