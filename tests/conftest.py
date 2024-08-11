@@ -15,7 +15,7 @@ import taina.schemas
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _prepare_test_database():
+def _prepare_test_database(worker_id):
     url = taina.core.config.postgres.url
 
     database = f"taina_test_{uuid.uuid4()}"
@@ -32,6 +32,10 @@ def _prepare_test_database():
     alembic_cfg = alembic.config.Config("alembic.ini")
     alembic.command.upgrade(alembic_cfg, "head")
 
+    worker_id = int(worker_id[2:]) + 1
+    taina.core.config.redis.db = worker_id
+    taina.core.config.redis.force_rollback = True
+
     yield
 
     query = psycopg.sql.SQL("DROP DATABASE {0};").format(database_sql)
@@ -45,6 +49,13 @@ async def _db():
     await taina.core.postgres.connect(taina.core.config.postgres.url)
     yield
     await taina.core.postgres.disconnect()
+
+
+@pytest.fixture()
+async def _redis():
+    await taina.core.redis.connect(taina.core.config.redis.url)
+    yield
+    await taina.core.redis.disconnect()
 
 
 @pytest.fixture()
@@ -87,7 +98,7 @@ async def auth_api_client(api_client, user_default, user_default_credentials):
     username, password = user_default_credentials
 
     response = await api_client.post(
-        "/api/tokens/access",
+        "/api/tokens/obtain",
         form={"username": username, "password": password},
     )
     assert response.status_code == 200

@@ -23,24 +23,28 @@ async def test_authenticate_user_with_invalid_password(user_default):
         await taina.auth.authenticate_user(user_default["username"], "invalid password")
 
 
-@pytest.mark.usefixtures("_db")
+@pytest.mark.usefixtures("_db", "_redis")
 async def test_get_current_user(user_default):
-    token = taina.auth.create_access_token({"sub": user_default["username"]})
-    user = await taina.auth.get_current_user(token)
+    username = user_default["username"]
+    refresh_token = await taina.auth.create_refresh_token(username)
+    access_token = await taina.auth.create_access_token(username, refresh_token)
+    user = await taina.auth.get_current_user(access_token)
     assert user == user_default
 
 
-@pytest.mark.usefixtures("_db")
+@pytest.mark.usefixtures("_db", "_redis")
 async def test_get_current_user_nonexistent_user():
-    token = taina.auth.create_access_token({"sub": "invalid"})
+    username = "nonexistent"
+    refresh_token = await taina.auth.create_refresh_token(username)
+    access_token = await taina.auth.create_access_token(username, refresh_token)
 
     with pytest.raises(fastapi.HTTPException) as e:
-        await taina.auth.get_current_user(token)
+        await taina.auth.get_current_user(access_token)
 
     assert e.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
 
 
-@pytest.mark.usefixtures("_db")
+@pytest.mark.usefixtures("_db", "_redis")
 async def test_get_current_user_invalid_token():
     with pytest.raises(fastapi.HTTPException) as e:
         await taina.auth.get_current_user("invalid token")
@@ -48,11 +52,12 @@ async def test_get_current_user_invalid_token():
     assert e.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED
 
 
-@pytest.mark.usefixtures("_db")
+@pytest.mark.usefixtures("_db", "_redis")
 async def test_get_current_user_token_without_username():
-    token = taina.auth.create_access_token({})
+    refresh_token = await taina.auth.create_refresh_token("")
+    access_token = await taina.auth.create_access_token("", refresh_token)
 
     with pytest.raises(fastapi.HTTPException) as e:
-        await taina.auth.get_current_user(token)
+        await taina.auth.get_current_user(access_token)
 
     assert e.value.status_code == fastapi.status.HTTP_401_UNAUTHORIZED

@@ -1,16 +1,13 @@
-import datetime
+import secrets
 
 import fastapi
 import fastapi.security
-import jwt
-import jwt.exceptions
 
 from . import models
 from . import security
 from .core import config
 
-ALGORITHM="HS256"
-OAUTH2_SCHEME = fastapi.security.OAuth2PasswordBearer(tokenUrl="api/tokens/access")
+OAUTH2_SCHEME = fastapi.security.OAuth2PasswordBearer(tokenUrl="/api/tokens/obtain")
 
 
 class AuthenticationError(Exception):
@@ -29,20 +26,24 @@ async def authenticate_user(username: str, password: str):
     return user
 
 
-
-def create_access_token(
-    data: dict,
-    ttl_minutes: int = config.security.access_token_ttl,
-):
-    expire = (
-        datetime.datetime.now(datetime.timezone.utc) +
-        datetime.timedelta(minutes=ttl_minutes)
-    )
-    data = {**data, "exp": expire}
-    return jwt.encode(data, config.security.secret_key, algorithm=ALGORITHM)
+async def create_refresh_token(
+    username: str,
+    ttl: int = config.security.refresh_token_ttl,
+) -> str:
+    refresh_token = secrets.token_urlsafe(48)
+    return await models.refresh_token_set(username, refresh_token, ttl)
 
 
-async def get_current_user(token: str = fastapi.Depends(OAUTH2_SCHEME)):
+async def create_access_token(
+    username: str,
+    refresh_token: str,
+    ttl: int = config.security.access_token_ttl,
+) -> str:
+    access_token = secrets.token_urlsafe(48)
+    return await models.access_token_set(username, access_token, refresh_token, ttl)
+
+
+async def get_current_user(access_token: str = fastapi.Depends(OAUTH2_SCHEME)):
     credentials_exception = fastapi.HTTPException(
         status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -50,13 +51,8 @@ async def get_current_user(token: str = fastapi.Depends(OAUTH2_SCHEME)):
     )
 
     try:
-        payload = jwt.decode(token, config.security.secret_key, algorithms=[ALGORITHM])
-    except jwt.exceptions.InvalidTokenError:
-        raise credentials_exception
-
-    username = payload.get("sub")
-
-    if not username:
+        username = await models.access_token_get(access_token)
+    except models.TokenDoesNotExist:
         raise credentials_exception
 
     try:

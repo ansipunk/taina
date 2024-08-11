@@ -8,12 +8,15 @@ import fastapi.responses
 from . import endpoints
 from .core import config
 from .core import postgres
+from .core import redis
 
 
 @contextlib.asynccontextmanager
 async def lifespan(_):
     await postgres.connect(config.postgres.url)
+    await redis.connect(config.redis.url)
     yield
+    await redis.disconnect()
     await postgres.disconnect()
 
 

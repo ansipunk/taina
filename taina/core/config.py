@@ -23,13 +23,27 @@ class PostgresSettings(pydantic_settings.BaseSettings):
     model_config = pydantic_settings.SettingsConfigDict(env_prefix="TAINA_POSTGRES_")
 
 
+class RedisSettings(pydantic_settings.BaseSettings):
+    host: str = "127.0.0.1"
+    port: int = 6379
+    db: int = 0
+    force_rollback: bool = False
+
+    @property
+    def url(self):
+        return f"redis://{self.host}:{self.port}"
+
+    model_config = pydantic_settings.SettingsConfigDict(env_prefix="TAINA_REDIS_")
+
+
 class SecuritySettings(pydantic_settings.BaseSettings):
-    secret_key: str = "0000000000000000000000000000000000000000000000000000000000000000"
-    access_token_ttl: int = 30  # Minutes
+    access_token_ttl: int = 60 * 15  # 15 minutes
+    refresh_token_ttl: int = 60 * 60 * 24  # 1 day
     user_password_salt: str = "00000000000000000000000000000000"
 
     model_config = pydantic_settings.SettingsConfigDict(env_prefix="TAINA_SECURITY_")
 
 
 postgres = PostgresSettings()
+redis = RedisSettings()
 security = SecuritySettings()
