@@ -57,6 +57,10 @@ class Session:
         if not self._conn:
             raise ConnectionNotAcquiredError
 
+    async def ping(self, *args, **kwargs):
+        self._check_connection()
+        return await self._conn.ping(*args, **kwargs)
+
     async def get(self, key: str | bytes, *args, **kwargs):
         self._check_connection()
         return await self._conn.get(key, *args, **kwargs)

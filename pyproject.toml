@@ -25,7 +25,6 @@ dev = [
     "async-asgi-testclient==1.4.11",
     "pytest-asyncio==0.23.8",
     "pytest-cov==5.0.0",
-    "pytest-freezegun==1.5.1",
     "pytest-mock==3.14.0",
     "pytest-xdist==3.6.1",
     "pytest==8.3.2",
@@ -42,9 +41,6 @@ omit = ["taina/migrations/*"]
 addopts = "-n 4 --cov=taina --cov-report=term-missing --cov-report=html"
 testpaths = ["tests"]
 asyncio_mode = "auto"
-filterwarnings = [
-    'ignore:distutils Version classes are deprecated:DeprecationWarning',
-]
 
 [tool.ruff.lint]
 select = [
