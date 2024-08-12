@@ -1,5 +1,3 @@
-import typing
-
 import fastapi
 import fastapi.exceptions
 import fastapi.security
@@ -31,15 +29,12 @@ async def obtain_token(
     return schemas.Token(
         access_token=access_token,
         refresh_token=refresh_token,
-        token_type="bearer",
+        token_type="bearer",  # noqa: S106
     )
 
 
 @router.post("/refresh", response_model=schemas.Token)
-async def refresh_token(
-    grant_type: typing.Literal["refresh"],
-    refresh_token: str,
-):
+async def refresh_token(refresh_token: str):
     try:
         username = await models.refresh_token_get(refresh_token)
     except models.TokenDoesNotExist:
@@ -56,7 +51,7 @@ async def refresh_token(
     return schemas.Token(
         access_token=new_access_token,
         refresh_token=new_refresh_token,
-        token_type="bearer",
+        token_type="bearer",  # noqa: S106
     )
 
 

@@ -44,7 +44,7 @@ async def test_refresh_token(api_client, user_default, user_default_credentials)
 
     response = await api_client.post(
         "/api/tokens/refresh",
-        query_string={"grant_type": "refresh", "refresh_token": refresh_token},
+        query_string={"refresh_token": refresh_token},
     )
     assert response.status_code == 200
 
@@ -60,7 +60,7 @@ async def test_refresh_token(api_client, user_default, user_default_credentials)
 
     response = await api_client.post(
         "/api/tokens/refresh",
-        query_string={"grant_type": "refresh", "refresh_token": refresh_token},
+        query_string={"refresh_token": refresh_token},
     )
     assert response.status_code == 200
 
@@ -68,7 +68,7 @@ async def test_refresh_token(api_client, user_default, user_default_credentials)
 async def test_refresh_token_invalid_token(api_client):
     response = await api_client.post(
         "/api/tokens/refresh",
-        query_string={"grant_type": "refresh", "refresh_token": "invalid token"},
+        query_string={"refresh_token": "invalid token"},
     )
     assert response.status_code == 401
 
@@ -108,7 +108,7 @@ async def test_revoke_token_with_access_token(
 
     response = await api_client.post(
         "/api/tokens/refresh",
-        query_string={"grant_type": "refresh", "refresh_token": refresh_token},
+        query_string={"refresh_token": refresh_token},
     )
     assert response.status_code == 401
 
@@ -148,7 +148,7 @@ async def test_revoke_token_with_refresh_token(
 
     response = await api_client.post(
         "/api/tokens/refresh",
-        query_string={"grant_type": "refresh", "refresh_token": refresh_token},
+        query_string={"refresh_token": refresh_token},
     )
     assert response.status_code == 401
 

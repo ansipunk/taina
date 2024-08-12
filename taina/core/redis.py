@@ -21,7 +21,7 @@ async def connect(
     global _pool
 
     if not _pool:
-        _pool = redis.asyncio.ConnectionPool.from_url(url, db=config.redis.db)
+        _pool = redis.asyncio.ConnectionPool.from_url(url, db=db)
 
 
 async def disconnect():

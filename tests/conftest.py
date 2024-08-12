@@ -45,7 +45,7 @@ def _prepare_test_database(worker_id):
 
 
 @pytest.fixture()
-async def _db():
+async def _postgres():
     await taina.core.postgres.connect(taina.core.config.postgres.url)
     yield
     await taina.core.postgres.disconnect()
@@ -59,7 +59,7 @@ async def _redis():
 
 
 @pytest.fixture()
-def user(_db):
+def user(_postgres):
     async def builder(
         username: str = "username",
         password: str = "P@ssw0rd",

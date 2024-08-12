@@ -40,10 +40,10 @@ async def connect(url: str = config.postgres.url):
 
             for _ in _transaction._enter_gen():
                 pass
-    else:
-        if not _pool:
-            _pool = psycopg_pool.AsyncConnectionPool(url, open=False)
-            await _pool.open()
+    # Not in testing mode
+    elif not _pool:  # pragma: no cover
+        _pool = psycopg_pool.AsyncConnectionPool(url, open=False)
+        await _pool.open()
 
 
 async def disconnect():
@@ -55,7 +55,8 @@ async def disconnect():
         _transaction._exit_gen(None, None, None)
         _transaction = None
 
-    if _pool:
+    # Not in testing mode
+    if _pool:  # pragma: no cover
         await _pool.close()
         _pool = None
 
@@ -76,15 +77,17 @@ class Session:
 
             self._conn = _conn
             return self
+        # Not in testing mode
+        else:  # pragma: no cover  # noqa: RET505
+            if not _pool:
+                raise PostgresNotConnectedError
 
-        if not _pool:
-            raise PostgresNotConnectedError
-
-        self._conn = await _pool.getconn()
-        return self
+            self._conn = await _pool.getconn()
+            return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        if self._conn and not config.postgres.force_rollback:
+        # Not in testing mode
+        if self._conn and not config.postgres.force_rollback:  # pragma: no cover
             await _pool.putconn(self._conn)
 
         self._conn = None
@@ -115,12 +118,14 @@ class Session:
                 await cursor.execute(str_query, params)
                 yield cursor
         except Exception:
-            if not self._transaction and not _transaction:
+            # Not in testing mode
+            if not self._transaction and not _transaction:  # pragma: no cover
                 await self._conn.rollback()
 
             raise
         else:
-            if not self._transaction and not _transaction:
+            # Not in testing mode
+            if not self._transaction and not _transaction:  # pragma: no cover
                 await self._conn.commit()
 
     async def fetch_one(

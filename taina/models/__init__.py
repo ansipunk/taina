@@ -5,6 +5,7 @@ from .token import refresh_token_del  # noqa: F401
 from .token import refresh_token_get  # noqa: F401
 from .token import refresh_token_get_by_access_token  # noqa: F401
 from .token import refresh_token_set  # noqa: F401
+from .user import User  # noqa: F401
 from .user import UserDoesNotExist  # noqa: F401
 from .user import UsernameInUse  # noqa: F401
 from .user import user_create  # noqa: F401

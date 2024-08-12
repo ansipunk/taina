@@ -4,7 +4,7 @@ import taina.models
 import taina.schemas
 
 
-@pytest.mark.usefixtures("_db")
+@pytest.mark.usefixtures("_postgres")
 async def test_user_create():
     schema = taina.schemas.UserCreate(
         username="username",
@@ -36,7 +36,7 @@ async def test_user_get(user_default):
     assert user["display_name"] == user_default["display_name"]
 
 
-@pytest.mark.usefixtures("_db")
+@pytest.mark.usefixtures("_postgres")
 async def test_user_get_nonexistent():
     with pytest.raises(taina.models.UserDoesNotExist):
         await taina.models.user_get("nonexistent")
@@ -49,7 +49,7 @@ async def test_user_list(user_default, user):
     assert users == [user_a, user_b]
 
 
-@pytest.mark.usefixtures("_db")
+@pytest.mark.usefixtures("_postgres")
 async def test_user_list_no_users():
     users = await taina.models.user_list()
     assert users == []
@@ -63,7 +63,7 @@ async def test_user_update(user_default):
     assert user["display_name"] == schema.display_name
 
 
-@pytest.mark.usefixtures("_db")
+@pytest.mark.usefixtures("_postgres")
 async def test_user_update_nonexistent():
     with pytest.raises(taina.models.UserDoesNotExist):
         await taina.models.user_update(
