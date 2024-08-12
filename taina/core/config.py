@@ -26,12 +26,19 @@ class PostgresSettings(pydantic_settings.BaseSettings):
 class RedisSettings(pydantic_settings.BaseSettings):
     host: str = "127.0.0.1"
     port: int = 6379
+    username: str | None = "taina"
+    password: str | None = "taina"
     db: int = 0
     force_rollback: bool = False
 
     @property
     def url(self):
-        return f"redis://{self.host}:{self.port}"
+        auth = ""
+
+        if self.username and self.password:
+            auth = f"{self.username}:{self.password}@"
+
+        return f"redis://{auth}{self.host}:{self.port}"
 
     model_config = pydantic_settings.SettingsConfigDict(env_prefix="TAINA_REDIS_")
 

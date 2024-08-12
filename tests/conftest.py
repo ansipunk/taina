@@ -53,7 +53,10 @@ async def _postgres():
 
 @pytest.fixture()
 async def _redis():
-    await taina.core.redis.connect(taina.core.config.redis.url)
+    await taina.core.redis.connect(
+        taina.core.config.redis.url,
+        db=taina.core.config.redis.db,
+    )
     yield
     await taina.core.redis.disconnect()
 

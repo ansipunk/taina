@@ -23,6 +23,7 @@ migrate: bootstrap
 	sudo -u postgres psql -c "ALTER USER taina CREATEDB;" || true
 	sudo -u postgres psql -c "CREATE DATABASE taina OWNER taina;" || true
 	$(PYTHON) -m alembic upgrade head
+	redis-cli ACL SETUSER taina \>taina on allkeys +@all
 
 dev: bootstrap
 	$(PYTHON) -m uvicorn taina:app
