@@ -8,7 +8,7 @@ import taina.schemas
 async def test_user_create():
     schema = taina.schemas.UserCreate(
         username="username",
-        password="password",
+        password="P@ssw0rd",
         display_name="Display Name",
     )
 
@@ -24,7 +24,7 @@ async def test_user_create_username_in_use(user_default):
         await taina.models.user_create(
             taina.schemas.UserCreate(
                 username=user_default["username"],
-                password="password",
+                password="P@ssw0rd",
             ),
         )
 

@@ -1,6 +1,6 @@
 async def test_user_create(api_client):
     username = "username"
-    password = "password"
+    password = "P@ssw0rd"
     display_name = "Display Name"
 
     response = await api_client.post(
@@ -65,7 +65,7 @@ async def test_users_update(api_client, user_default):
 async def test_users_update_nonexistent(api_client):
     response = await api_client.put(
         "/api/users/nonexistent",
-        json={"display_name": "display_name"},
+        json={"display_name": "display name"},
     )
 
     assert response.status_code == 404

@@ -62,7 +62,7 @@ async def _redis():
 def user(_db):
     async def builder(
         username: str = "username",
-        password: str = "password",
+        password: str = "P@ssw0rd",
         display_name: str = "Display Name",
     ) -> dict:
         return await taina.models.user_create(
@@ -78,7 +78,7 @@ def user(_db):
 
 @pytest.fixture()
 def user_default_credentials():
-    return "john.doe", "password"
+    return "johndoe", "P@ssw0rd"
 
 
 @pytest.fixture()
