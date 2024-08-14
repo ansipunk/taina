@@ -8,7 +8,10 @@ class User(pydantic.BaseModel):
 
     @pydantic.field_validator("display_name", mode="before")
     @classmethod
-    def validate_display_name(cls, display_name: str) -> str:
+    def validate_display_name(cls, display_name: str | None) -> str | None:
+        if display_name is None:
+            return None
+
         display_name = display_name.strip()
 
         if not display_name:

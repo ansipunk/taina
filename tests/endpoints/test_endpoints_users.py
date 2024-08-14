@@ -47,11 +47,11 @@ async def test_users_get_nonexistent(api_client):
     assert response.status_code == 404
 
 
-async def test_users_update(api_client, user_default):
+async def test_users_update(auth_api_client, user_default):
     new_display_name = "New Display Name"
 
-    response = await api_client.put(
-        f"/api/users/{user_default['username']}",
+    response = await auth_api_client.put(
+        "/api/users/me",
         json={"display_name": new_display_name},
     )
 
@@ -62,21 +62,26 @@ async def test_users_update(api_client, user_default):
     }
 
 
-async def test_users_update_nonexistent(api_client):
+async def test_users_update_unauthenticated(api_client):
     response = await api_client.put(
-        "/api/users/nonexistent",
+        "/api/users/me",
         json={"display_name": "display name"},
     )
 
-    assert response.status_code == 404
+    assert response.status_code == 401
 
 
-async def test_users_delete(api_client, user_default):
-    response = await api_client.delete(f"/api/users/{user_default['username']}")
+async def test_users_delete(auth_api_client):
+    response = await auth_api_client.delete("/api/users/me")
     assert response.status_code == 204
 
-    response = await api_client.get(f"/api/users/{user_default['username']}")
-    assert response.status_code == 404
+    response = await auth_api_client.get("/api/users/me")
+    assert response.status_code == 401
+
+
+async def test_users_delete_unauthenticated(api_client):
+    response = await api_client.delete("/api/users/me")
+    assert response.status_code == 401
 
 
 async def test_users_get_me(auth_api_client, user_default):

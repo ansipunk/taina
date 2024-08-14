@@ -27,23 +27,23 @@ async def read_users_me(current_user=fastapi.Depends(auth.get_current_user)):
     return current_user
 
 
+@router.put("/me", response_model=schemas.UserGet)
+async def users_update(
+    user: schemas.UserUpdate,
+    current_user=fastapi.Depends(auth.get_current_user),
+):
+    return await models.user_update(current_user["username"], user)
+
+
+@router.delete("/me")
+async def users_delete(current_user=fastapi.Depends(auth.get_current_user)):
+    await models.user_delete(current_user["username"])
+    raise fastapi.exceptions.HTTPException(204)
+
+
 @router.get("/{username}", response_model=schemas.UserGet)
 async def users_get(username: str):
     try:
         return await models.user_get(username)
     except models.UserDoesNotExist:
         raise fastapi.exceptions.HTTPException(404)
-
-
-@router.put("/{username}", response_model=schemas.UserGet)
-async def users_update(username: str, user: schemas.UserUpdate):
-    try:
-        return await models.user_update(username, user)
-    except models.UserDoesNotExist:
-        raise fastapi.exceptions.HTTPException(404)
-
-
-@router.delete("/{username}")
-async def users_delete(username: str):
-    await models.user_delete(username)
-    raise fastapi.exceptions.HTTPException(204)

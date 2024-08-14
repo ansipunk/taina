@@ -38,7 +38,7 @@ version = {attr = "taina.__version__"}
 omit = ["taina/migrations/*"]
 
 [tool.pytest.ini_options]
-addopts = "-n 4 --cov=taina --cov-report=term-missing --cov-report=html"
+addopts = "-n 4 --cov=taina --cov-report=term-missing --cov-report=html --cov-fail-under=100"
 testpaths = ["tests"]
 asyncio_mode = "auto"
 

@@ -66,6 +66,14 @@ def test_validate_display_name():
     )
 
 
+def test_validate_display_name_none():
+    taina.schemas.UserCreate(
+        username="username10",
+        password="P@ssw0rd",
+        display_name=None,
+    )
+
+
 @pytest.mark.parametrize(
     ("display_name", "error_message"),
     [
